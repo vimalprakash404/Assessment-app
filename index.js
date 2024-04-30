@@ -8,7 +8,7 @@ const axios = require('axios');
 
 const port = 80;
 
-
+app.set('trust proxy', true);
 app.use(useragent.express());
 
 // Middleware to get location information
