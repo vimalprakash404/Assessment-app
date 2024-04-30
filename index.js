@@ -6,7 +6,7 @@ const cors = require('cors');
 const useragent = require('express-useragent');
 const axios = require('axios');
 
-const port = 3000;
+const port = 80;
 
 
 app.use(useragent.express());
