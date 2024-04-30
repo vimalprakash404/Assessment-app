@@ -47,7 +47,9 @@ function createAssessment(req, res) {
 
 async function startAssessment(req, res) {
     try {
-        const { assessment } = req.body;
+        // const { assessment } = req.body;
+        const assessment = await assessmentModel.find({});
+        console.log(assessment) 
         const assessmentObject = await assessmentModel.findOne({ _id: assessment });
         if (!assessmentObject) {
             return res.status(404).json({ message: "assessment not found", success: true })

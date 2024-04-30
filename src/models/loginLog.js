@@ -16,7 +16,12 @@ const schema = new mongoose.Schema({
     region: { type: String },
     country: { type: String },
     os: { type: String } ,
-    browser : {type : String} 
+    browser : {type : String} ,
+    status : {type : Number}
+
+    // status - 1 - success 
+    // status - 2 - user not found
+    // status - 3 - invalid password
 })
 
 

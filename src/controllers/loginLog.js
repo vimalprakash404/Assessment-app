@@ -1,6 +1,6 @@
 const loginLog =require( "../models/loginLog");
 
-async function  insertLoginLog(req){
+async function  insertLoginLog(req , status ){
     const time  =  Date.now();
     const userAgent = req.useragent;
     const ip = req.ip;
@@ -11,7 +11,7 @@ async function  insertLoginLog(req){
     const city = req.details.city;
     const region = req.details.region;
     const country =req.details.country;
-    const loginLogObjet =await loginLog({time, device,ip,city,region, country, os, browser});
+    const loginLogObjet =await loginLog({time, device,ip,city,region, country, os, browser ,status});
     await loginLogObjet.save();
 
 }
