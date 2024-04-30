@@ -1,8 +1,9 @@
 const userModel =  require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken"); 
+const {insertLoginLog} =require("./loginLog")
 
-async function login(username ,password ) {
+async function login(username ,password , req) {
     try {
         const user =  await userModel.findOne({username});
         if(!user){
@@ -16,6 +17,7 @@ async function login(username ,password ) {
        const key = process.env.KEY ; 
        user.password=undefined ;
        const token = jwt.sign({user},key ,{expiresIn : "24h"}); 
+       await insertLoginLog(req);
        return {success:true,message:"you Logged In",token,code:200} 
     }
     catch(error) { 
@@ -55,7 +57,7 @@ async function createCandidate(req , res){
         return res.status(code).json(createUser);
     }
     catch(error) { 
-        return res.status(500).json({success : false , message :"server error while creating candidate" + error})
+        return res.status(500).json({code:500, success : false , message :"server error while creating candidate" + error})
     }
 }
 
@@ -63,7 +65,8 @@ async function createCandidate(req , res){
 async function   candidateLogin(req, res) { 
     try {
         const {username ,password} =req.body
-        var  createUser =await  login(username , password);
+        var  createUser =await  login(username , password , req);
+        console.log(createUser);
         const  code =  createUser["code"];
         createUser["code"] =  undefined ;
         return res.status(code).json(createUser);
