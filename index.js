@@ -6,7 +6,7 @@ const cors = require('cors');
 const useragent = require('express-useragent');
 const axios = require('axios');
 const path = require("path")
-const port = 4000;
+const port = process.env.PORT;
 
 // app.set('trust proxy', true);
 app.use(useragent.express());
