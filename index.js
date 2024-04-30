@@ -42,25 +42,7 @@ app.use(cors());
 app.use(express.json());
 
 
-app.get('/', (req, res) => {
-    const ipAddress = req.ip;
-    const userAgent = req.useragent;
-    const details = req.details;
 
-    const device = userAgent.isDesktop ? 'Desktop' : userAgent.isMobile ? 'Mobile' : 'Tablet';
-    const os = userAgent.os.toString();
-    const browser = userAgent.browser;
-
-    const requestData = {
-        ipAddress,
-        device,
-        os,
-        browser,
-        location
-    };
-
-    res.json(requestData);
-});
 
 
 app.use("/api", router)
