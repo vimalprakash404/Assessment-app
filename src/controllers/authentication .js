@@ -2,6 +2,10 @@ const userModel = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { insertLoginLog } = require("./loginLog")
+const {body, validationResult} =  require("express-validator")
+
+
+
 
 async function login(username, password, req) {
     try {
@@ -64,7 +68,19 @@ async function createCandidate(req, res) {
 }
 
 
+// validator for login 
+ 
+const loginValidator=[
+    body("username").isString().notEmpty() ,
+    body("password").notEmpty().notEmpty()
+]
+
 async function candidateLogin(req, res) {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()){
+        return res.status(401).json({success: false , errors : errors.array()});
+    }
     try {
         const { username, password } = req.body
         var createUser = await login(username, password, req);
@@ -78,4 +94,4 @@ async function candidateLogin(req, res) {
     }
 }
 
-module.exports = { createCandidate, candidateLogin };
+module.exports = { createCandidate, candidateLogin ,loginValidator };
