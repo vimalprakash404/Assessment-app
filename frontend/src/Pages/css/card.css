@@ -3,17 +3,24 @@ body{
 }
 
 /* @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap'); */
+
+.cookie-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* This ensures the wrapper takes up the full height of the viewport */
+}
+
+
 .cookie-card {
-    max-width: 70%;
-    width:70%;
-    margin-top : 45px;
-    padding: 1rem;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 20px 20px 30px rgba(0, 0, 0, .05);
-    font-family: "Roboto", sans-serif;
-    margin :auto ;
-  }
+  max-width: 70%;
+  width: 70%;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 20px 20px 30px rgba(0, 0, 0, .05);
+  font-family: "Roboto", sans-serif;
+}
   
   .title {
     font-weight: 600;
@@ -50,7 +57,7 @@ body{
   .pref {
     font-size: 0.75rem;
     line-height: 1rem;
-    color: rgb(31 41 55 );
+    color: #22e33c;
     -webkit-text-decoration-line: underline;
     text-decoration-line: underline;
     transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -68,10 +75,10 @@ body{
   }
   
   .accept {
-    font-size: 0.75rem;
+    font-size:1rem;
     line-height: 1rem;
-    background-color: rgb(17 24 39);
-    font-weight: 500;
+    background-color: #296931;
+    font-weight: 900;
     text-align: center;
     border-radius: 0.5rem;
     color: #fff;
@@ -86,7 +93,7 @@ body{
   }
   
   .accept:hover {
-    background-color: rgb(55 65 81);
+    background-color: #3f994b;
   }
   
   .accept:focus {
