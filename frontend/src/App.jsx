@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { Routes, Route } from "react-router-dom";
 import Login from './Pages/Login'
-import Instruction from './Pages/Instruction'
+import Instruction from './Pages/Instruction';
+
+import React, { ReactElement } from 'react';
+
 function App() {
 
 

@@ -1,3 +1,3 @@
-const url = ()=>{return  "http//localhost:3000"}
+const url = ()=>{return  ""  }
 
 export default url ;

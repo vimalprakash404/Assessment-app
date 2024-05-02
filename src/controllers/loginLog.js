@@ -7,10 +7,21 @@ async function  insertLoginLog(req , status ){
 
     const device = userAgent.isDesktop ? 'Desktop' : userAgent.isMobile ? 'Mobile' : 'Tablet';
     const os = userAgent.os.toString();
-    const browser = userAgent.browser;
-    const city = req.details.city;
-    const region = req.details.region;
-    const country =req.details.country;
+    const browser = userAgent.browser; 
+    var city = undefined ;
+    var region = undefined ;
+    var country  =  undefined ;
+    if (req.details === null ) {
+         city  = undefined ;
+         region  = undefined ;
+         country = undefined 
+    }
+    else {
+         city = req.details.city;
+         region = req.details.region;
+         country =req.details.country;
+    }
+    
     const loginLogObjet =await loginLog({time, device,ip,city,region, country, os, browser ,status});
     await loginLogObjet.save();
 

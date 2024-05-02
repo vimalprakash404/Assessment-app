@@ -17,6 +17,7 @@
     "express": "^4.19.2",
     "express-useragent": "^1.0.15",
     "express-validator": "^7.0.1",
+    "geoip-lite": "^1.4.10",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.2",
     "multer": "^1.4.5-lts.1",

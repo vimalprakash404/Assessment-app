@@ -11,19 +11,19 @@ async function login(username, password, req) {
     try {
         const user = await userModel.findOne({ username });
         if (!user) {
-            await insertLoginLog(req, 2);
+             await insertLoginLog(req, 2);
             return { success: false, message: "Invalid user Credentials ", code: 401 }
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            await insertLoginLog(req, 3);
+             await insertLoginLog(req, 3);
             return { success: false, message: " Invalid user Credentials", code: 400 };
         }
         const key = process.env.KEY;
         user.password = undefined;
         const token = jwt.sign({ user }, key, { expiresIn: "24h" });
-        await insertLoginLog(req, 1);
+         await insertLoginLog(req, 1);
         return { success: true, message: "you Logged In", token, code: 200 }
     }
     catch (error) {
@@ -79,12 +79,11 @@ async function candidateLogin(req, res) {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()){
-        return res.status(401).json({success: false , errors : errors.array()});
+        return res.status(402).json({success: false , errors : errors.array()});
     }
     try {
         const { username, password } = req.body
         var createUser = await login(username, password, req);
-        console.log(createUser);
         const code = createUser["code"];
         createUser["code"] = undefined;
         return res.status(code).json(createUser);
@@ -94,4 +93,9 @@ async function candidateLogin(req, res) {
     }
 }
 
-module.exports = { createCandidate, candidateLogin ,loginValidator };
+
+async function verify(req , res){
+    return res.status(200).json({isAuthenticated : true})
+}
+
+module.exports = { verify , createCandidate, candidateLogin ,loginValidator };

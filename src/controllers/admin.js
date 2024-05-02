@@ -65,7 +65,6 @@ async function createUsers(req, res) {
         return res.status(400).send('No file uploaded.');
     }
     const response = await bulkUserGenerator(req, res);
-    console.log(response)
     return res.status(response.code).json(response);
 
 }

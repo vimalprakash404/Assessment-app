@@ -4,14 +4,18 @@ import axios from "axios";
 import getToken from "../service/getToken";
 import "./css/message.css";
 import { BsInfoCircleFill } from "react-icons/bs";
+import url from "../Connections/connections";
+import { useNavigate } from "react-router-dom";
+
 
 function Instruction() {
     const [canStartExam, setCanStartExam] = useState(false);
     const [examUrl, setExamUrl] = useState("")
+    const navigate = useNavigate();
     async function getAssessment() {
         try {
             const assessment = "662f6dd2b1684fd5758b9726";
-            const response = await axios.post("/api/assessment/start", { assessment }, { headers: { Authorization: getToken() } })
+            const response = await axios.post(url() + "/api/assessment/start", { assessment }, { headers: { Authorization: getToken() } })
             console.log(response.data)
             setCanStartExam(response.data.canStartExam)
             setExamUrl(response.data.assessmentDetails.url)
@@ -19,6 +23,10 @@ function Instruction() {
         catch (error) {
             if (!error.response) {
                 console.log("net error")
+            }
+            else if (error.response.status === 401) {
+                navigate("/")
+                localStorage.removeItem("token");
             }
             else {
                 console.error("Instruction page getAssessment Error", error);
