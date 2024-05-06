@@ -15,7 +15,6 @@ function DashBoard() {
                     <a className="navbar-brand inline-block" href="#">
                         <img src={logo} width="50" height="50" className="inline-block align-top" alt="" />
                     </a>
-                    {/* <h5 className="inline-block">Dashboard</h5> */}
                 </div>
 
                 <button className="btn btn-light mx-5">Logout</button>
@@ -34,10 +33,6 @@ function DashBoard() {
                         </div>
                     </div>
                 </div>
-
-
-
-
                 <div className="col-4">
                     <div className="card">
                         <div className="card-header">

@@ -108,7 +108,7 @@ function Instruction() {
                     </button> */}
                     {
                         canStartExam ? (<a className="accept" href={examUrl}>
-                            Start Exam
+                            Join Exam
                         </a>) : (<div className="info-msg"><BsInfoCircleFill /> Exam is not live</div>)
                     }
 
