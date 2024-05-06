@@ -40,7 +40,7 @@ const Login = () => {
             });
             console.log('Login successful:', response.data);
 
-            localStorage.setItem("token", response.data["token"])
+            sessionStorage.setItem("token", response.data["token"])
             // Handle successful login response here
             setErrorMessage(false);
             navigate("/instruction", { replace: true, });
@@ -57,7 +57,7 @@ const Login = () => {
                 // Handle other HTTP errors here
                 const responseData = error.response.data;
                 setErrorMessage(responseData.message);
-                localStorage.removeItem("token");
+                sessionStorage.removeItem("token");
             }
             // Handle login error here
 
