@@ -76,4 +76,4 @@ async function startAssessment(req, res) {
         return res.status(500).json({ message: "server while starting assessment " + error })
     }
 }
-module.exports = { createAssessment, createAssessmentDetails, startAssessment }
+module.exports = { createAssessment, createAssessmentDetails, startAssessment  , createDetails}

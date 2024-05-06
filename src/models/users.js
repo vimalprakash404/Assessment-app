@@ -16,20 +16,20 @@ const userSchema   =new mongoose.Schema( {
 
 
 
-userSchema.pre("save" , async function (next){
+
+
+async function insertManyWithEncryptedPasswords(users) {
     try {
-        if(!this.isDirectModified("password")){
-            return next();
-        }
-        const hashedPassword = await bcrypt.hash(this.password, 10 );
-        this.password = hashedPassword;
-        next();
-     }
-    catch (error){
-        return  next(error);
+        const encryptedUsers = await Promise.all(users.map(async (user) => {
+            const hashedPassword = await bcrypt.hash(user.password, 10);
+            return { username: username, password: hashedPassword };
+        }));
+        return await userModel.insertMany(encryptedUsers);
+    } catch (error) {
+        throw error;
     }
-})
+}
 
 
 const  userModel =  mongoose.model("User" , userSchema);
-module.exports = userModel ; 
+module.exports = { userModel , insertManyWithEncryptedPasswords} ; 

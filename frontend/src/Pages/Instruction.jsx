@@ -15,7 +15,7 @@ function Instruction() {
     async function getAssessment() {
         try {
             const assessment = "662f6dd2b1684fd5758b9726";
-            const response = await axios.post(url() + "/api/assessment/start", { assessment }, { headers: { Authorization: getToken() } })
+            const response = await axios.post("/api/assessment/start", { assessment }, { headers: { Authorization: getToken() } })
             console.log(response.data)
             setCanStartExam(response.data.canStartExam)
             setExamUrl(response.data.assessmentDetails.url)

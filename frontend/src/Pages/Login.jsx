@@ -6,7 +6,7 @@ import "./css/login.css";
 import "./css/message.css";
 import { MdDangerous } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-
+import logo from "../assets/logo.png"
 import url from '../Connections/connections';
 import isLoggedIn from '../Connections/isLoggedIn';
 
@@ -33,8 +33,8 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            console.log("Url",url()+'/api/auth/login')
-            const response = await axios.post(url()+'/api/auth/login', {
+            console.log("Url", url() + '/api/auth/login')
+            const response = await axios.post('/api/auth/login', {
                 username: username,
                 password: password
             });
@@ -63,20 +63,28 @@ const Login = () => {
 
         }
     };
-  
+
     return (
         <div>
 
             <div class="card">
                 <form onSubmit={handleLogin}>
-                    <h2 class="title"> Log in</h2>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <img src={logo} style={{ height: 100 }} />
+
+                    </div>
+                    <p class="or"></p>
+                    {/* <div>
+                        <h2 class="title"> Log in</h2>
+                    </div> */}
+
                     {
                         errorMessage ? (<div class="error-msg">
 
                             <MdDangerous />  {errorMessage}
                         </div>) : (<></>)
                     }
-                    <p class="or"></p>
+                   
 
                     <div class="email-login">
                         <label for="email"> <b>Username</b></label>
@@ -95,7 +103,7 @@ const Login = () => {
                 </form>
             </div>
 
-            
+
 
         </div>
     );

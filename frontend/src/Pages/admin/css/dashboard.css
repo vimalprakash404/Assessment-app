@@ -1,0 +1,50 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background : white ;
+    height: 100%;
+}
+#root{
+    height:100%;
+}
+
+header {
+    background-color: #3295e6;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav {
+    background-color: #3295e6;
+    color: #fff;
+    padding: 10px 0;
+    text-align: right;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+}
+
+nav a:hover {
+    background-color: #555;
+}
+
+.container {
+    display: flex;
+    height : 100% ;
+}
+
+.sidebar {
+    background-color: #6b7c8a;
+    width: 200px;
+    padding: 20px;
+    height : 90vh ;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}

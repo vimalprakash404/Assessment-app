@@ -1,4 +1,4 @@
-const userModel = require("../models/users");
+const {userModel} = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { insertLoginLog } = require("./loginLog")
@@ -98,4 +98,4 @@ async function verify(req , res){
     return res.status(200).json({isAuthenticated : true})
 }
 
-module.exports = { verify , createCandidate, candidateLogin ,loginValidator };
+module.exports = { verify , createCandidate, candidateLogin ,loginValidator  , signUp};
