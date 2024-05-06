@@ -8,6 +8,11 @@ const cors = require('cors');
 const useragent = require('express-useragent');
 const axios = require('axios');
 const path = require("path")
+const bodyParser = require("body-parser")
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
 const port = process.env.PORT;
 
 // app.set('trust proxy', true);
