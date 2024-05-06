@@ -38,7 +38,7 @@ function Instruction() {
     getAssessment();
     return (
 
-        <div class="cookie-wrapper">
+        <div className="cookie-wrapper">
             <div className="cookie-card" style={{ margin: "auto" }}>
                 <span className="title">📝 Instructions</span>
                 <p className="description"><ol>

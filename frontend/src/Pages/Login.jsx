@@ -67,26 +67,26 @@ const Login = () => {
     return (
         <div>
 
-            <div class="card">
+            <div className="card">
                 <form onSubmit={handleLogin}>
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         <img src={logo} style={{ height: 100 }} />
 
                     </div>
-                    <p class="or"></p>
+                    <p className="or"></p>
                     {/* <div>
                         <h2 class="title"> Log in</h2>
                     </div> */}
 
                     {
-                        errorMessage ? (<div class="error-msg">
+                        errorMessage ? (<div className="error-msg">
 
                             <MdDangerous />  {errorMessage}
                         </div>) : (<></>)
                     }
                    
 
-                    <div class="email-login">
+                    <div className="email-login">
                         <label for="email"> <b>Username</b></label>
                         <input type="text"
                             placeholder="Username"
@@ -98,7 +98,7 @@ const Login = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)} required />
                     </div>
-                    <button class="cta-btn">Log In</button>
+                    <button className="cta-btn">Log In</button>
                     {/* <a class="forget-pass" href="#">Forgot password?</a> */}
                 </form>
             </div>
