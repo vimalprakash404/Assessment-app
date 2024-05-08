@@ -23,10 +23,10 @@ async function verifyAdmin( req , res , next ){
         return res.status(401).json({success : false , message : "NO token provided" , code  :  401 })
     }
     try { 
-        const key = process.key.env.KEY ;
+        const key = process.env.KEY ;
         const decode  = jwt.verify(token, key );
         req.user = decode.user;
-        const adminExist = await adminModel.findOne({id : decode.user._id})
+        const adminExist = await adminModel.findOne({id : decode.user.id});
         if (!adminExist){
             return res.status(401).json({success: false , message : "Invalid user data in token "});
         }  

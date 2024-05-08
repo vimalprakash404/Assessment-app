@@ -12,23 +12,58 @@ import { Modal, Button } from 'react-bootstrap';
 
 import { saveAs } from 'file-saver';
 import { createPDF } from '../../service/pdfCreator';
-
+import adminGetToken from "../../service/adminGetToken";
+import isLoggedIn from "../../Connections/isAdminLoggedIn";
+import { useNavigate } from "react-router-dom";
 function DashBoard() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
+    const navigate = useNavigate();
 
     const [candidates, setCandidates] = useState(-1)
     const [candidatesLogged, setCandidatesLogged] = useState(-1);
     const [candidatesNotLogged, setCandidatesNotLogged] = useState(-1);
-    const [candidatesTable, setCandidatesTable] = useState([])
+    const [candidatesTable, setCandidatesTable] = useState([]);
+
+    useEffect(()=>{
+        function isAuthenticated() {
+            const caller = async () => {
+                try {
+
+                    const response = await axios.post(url() + "/api/admin/verify", {}, {
+                        headers: {
+                            Authorization: adminGetToken()
+                        }
+                    })
+                    console.log("admin " , response);
+                    return response ;
+            
+                }
+                catch (error) {
+                   
+                    if (!error.response){
+                        console.log("cannot connect to server");
+                    }
+                    else if(error.response.status === 401 ){
+                        navigate("/admin");
+                    }
+                    else {
+                        console.log("some error occurred" , error);
+                    }
+                }
+            }
+            caller();
+        }
+        isAuthenticated();
+    }, [])
+    
     useEffect(() => {
         (async () => {
 
 
             try {
-                const dataResponse = await axios.post(url() + "/api/admin/count");
+                const dataResponse = await axios.post(url() + "/api/admin/count" , {} , {headers : {Authorization : adminGetToken()}});
                 console.log("Response : " + JSON.stringify(dataResponse.data.totalUsers))
                 setCandidates(dataResponse.data.totalUsers);
                 setCandidatesLogged(dataResponse.data.loggedInUsers);
@@ -39,7 +74,7 @@ function DashBoard() {
             }
 
             try {
-                const response = await axios.post(url() + "/api/admin/get");
+                const response = await axios.post(url() + "/api/admin/get" , {} , {headers : {Authorization : adminGetToken()}});
                 console.log("users Response " + JSON.stringify(response.data.data))
                 console.log(response.data.data);
                 setCandidatesTable(response.data.data)
@@ -78,7 +113,7 @@ function DashBoard() {
     };
     async function handleExport() {
         try {
-            const response = await axios.post(url() + "/api/admin/export");
+            const response = await axios.post(url() + "/api/admin/export" , {} , {headers : {Authorization : adminGetToken()}});
             console.log("export :" + JSON.stringify(response.data.data));
             const realData = response.data.data || [];
 
@@ -99,7 +134,7 @@ function DashBoard() {
 
     async function handleAccessDownload() {
         try {
-            const response = await axios.post(url() + "/api/admin/export");
+            const response = await axios.post(url() + "/api/admin/export"  ,{},{headers : {Authorization : adminGetToken()}});
             console.log("export :" + JSON.stringify(response.data.data));
             const realData = response.data.data || [];
 
@@ -114,7 +149,7 @@ function DashBoard() {
         try {
 
             console.log("id:" + id)
-            const response = await axios.post(url() + "/api/admin/user/details", { userId: id });
+            const response = await axios.post(url() + "/api/admin/user/details", { userId: id } , {headers : {Authorization : adminGetToken()}});
             console.log("res :" + JSON.stringify(response.data.data));
             const realData = response.data.data || [];
 
@@ -129,7 +164,7 @@ function DashBoard() {
     const [roll , setRoll] = useState()
     async function getUserLogDetails(id , roll){
       try {
-        const response = await axios.post(url() +"/api/admin/login/log", {id : id});
+        const response = await axios.post(url() +"/api/admin/login/log", {id : id} , {headers : {Authorization : adminGetToken()}});
         console.log("res : " + JSON.stringify(response.data.loginLogs));
         setLoginDetails(response.data.loginLogs);
         handleShow();

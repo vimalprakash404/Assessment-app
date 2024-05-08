@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Routes, Route } from "react-router-dom";
 import Login from './Pages/Login'
+import  AdminLogin from './Pages/admin/Login';
 import Instruction from './Pages/Instruction';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -14,8 +15,9 @@ function App() {
    
       <Routes>
         <Route path='/' element={<Login />} />
-        <Route path='/instruction' element={<Instruction />} />
+        <Route path='/Instruction' element={<Instruction />} />
         <Route path='/Dashboard' element={<DashBoard />} />
+        <Route path="/Admin" element ={<AdminLogin/>}/>
       </Routes>
       
   

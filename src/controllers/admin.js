@@ -6,7 +6,7 @@ const { Parser } = require("json2csv");
 const { userModel, insertManyWithEncryptedPasswords } = require("../models/users");
 const assessmentModel = require("../models/assessment");
 const assessmentDetailsModel = require("../models/assessmentDetail");
-const { passwordsModel, insertManyPasswords, findAllPasswords , findById } = require("../models/passwords")
+const { passwordsModel, insertManyPasswords, findAllPasswords, findById } = require("../models/passwords")
 const { signUp } = require("./authentication ")
 const { createDetails } = require("../controllers/assessment")
 const bcrypt = require('bcrypt');
@@ -64,7 +64,8 @@ async function create(req, res) {
 async function login(req, res) {
     try {
         const { username, password } = req.body;
-        const user = await adminModel.find({ username });
+        const user = await adminModel.findOne({ username });
+        console.log(user, password);
         if (user) {
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (!passwordMatch) {
@@ -73,7 +74,7 @@ async function login(req, res) {
             const key = process.env.KEY;
             user.password = undefined;
             const token = jwt.sign({ user }, key, { expiresIn: "24h" });
-            return res.status(401).json({ success: true, message: "login success ", token })
+            return res.status(200).json({ success: true, message: "login success ", token })
         }
         else {
             return res.status(401).json({ message: "User not found", success: false })
@@ -113,7 +114,7 @@ async function bulkUserGenerator(req) {
                     const existingUsernamesSet = new Set(existingUsernames.map(user => user.username));
                     const usersToInsert = usersData.filter(user => !existingUsernamesSet.has(user.username));
                     console.log("no user", usersToInsert);
-                    
+
                     insertManyWithEncryptedPasswords(usersData)
                         .then(users => {
                             var assessmentDetailData = [];
@@ -172,8 +173,8 @@ async function createUsers(req, res) {
             user.push({ roll: i["ROLL"], url: "example.com", un: i["ROLL"] + "@sample.com", pw: i["password"] })
         })
     }
-    else if(response.code === 402){
-        return res.status(402).json({message: "user already inserted"})
+    else if (response.code === 402) {
+        return res.status(402).json({ message: "user already inserted" })
     }
     const pdfBuffer = createPDF(user);
     const stream = new Readable();
@@ -192,18 +193,18 @@ async function createUsers(req, res) {
 
 async function getAllUser(req, res) {
     const data = await findAllPasswords();
-    data.map((element)=> element.password = "*******")
+    data.map((element) => element.password = "*******")
     return res.status(200).json({ message: "response", data })
 }
 
-async function getUserById(req ,res){
+async function getUserById(req, res) {
     try {
-        const {userId} = req.body;
-        const data  = await findById(userId);
-        return res.status(200).json({success : true , data})
-     }
-    catch(error){
-        return  res.status(500).json({message : "server error while getting" + error, error : JSON.stringify(error)})
+        const { userId } = req.body;
+        const data = await findById(userId);
+        return res.status(200).json({ success: true, data })
+    }
+    catch (error) {
+        return res.status(500).json({ message: "server error while getting" + error, error: JSON.stringify(error) })
     }
 }
 
@@ -213,16 +214,21 @@ async function exportUserData(req, res) {
 }
 
 
-async function count(req , res) {
+async function count(req, res) {
     try {
-            const totalUsers = await userModel.countDocuments();
-            const loggedInUsers = await  userModel.countDocuments({status  : 1 });
-            const notLoggedInUsers  =await userModel.countDocuments( {status : 0});
-            return  res.status(200).json({totalUsers , loggedInUsers , notLoggedInUsers })
+        const totalUsers = await userModel.countDocuments();
+        const loggedInUsers = await userModel.countDocuments({ status: 1 });
+        const notLoggedInUsers = await userModel.countDocuments({ status: 0 });
+        return res.status(200).json({ totalUsers, loggedInUsers, notLoggedInUsers })
     }
-    catch (error){
-        return res.status(500).json({message : "server error while getting dashboard count "})
+    catch (error) {
+        return res.status(500).json({ message: "server error while getting dashboard count " })
     }
 }
 
-module.exports = { createUsers, upload, create, createAdminValidator, login, getAllUser , exportUserData , count , getUserById}
+
+function verify(req, res) {
+    return res.status(200).json({isAuthenticated : true })
+}
+
+module.exports = { createUsers, upload, create, createAdminValidator, login, getAllUser, exportUserData, count, getUserById , verify}
