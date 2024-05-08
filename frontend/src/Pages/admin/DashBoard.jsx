@@ -165,13 +165,17 @@ function DashBoard() {
     async function getUserLogDetails(id , roll){
       try {
         const response = await axios.post(url() +"/api/admin/login/log", {id : id} , {headers : {Authorization : adminGetToken()}});
-        console.log("res : " + JSON.stringify(response.data.loginLogs));
-        setLoginDetails(response.data.loginLogs);
+        var getAllData = response.data.loginLogs;
+        getAllData.forEach((element) =>{
+            element.time = new Date(element.time).toLocaleString()
+        })
+        console.log("res : " + JSON.stringify(getAllData));
+        setLoginDetails(getAllData);
         handleShow();
         setRoll(roll)
       }
       catch (error){
-        console.error("server while fetching the login details form server") 
+        console.error("server while fetching the login details form server" + error) 
       }
     }
     return (
@@ -205,7 +209,7 @@ function DashBoard() {
 
                             {loginDetails && loginDetails.map(element=>(
                                 <tr>
-                                <td scope="col" > {Date(element.time)}</td>
+                                <td scope="col" > {element.time}</td>
                                 <td scope="col"> {element.device} </td>
                                 <td scope="col" > {element.ip}</td>
                                 <td scope="col" > {element.os}</td>
