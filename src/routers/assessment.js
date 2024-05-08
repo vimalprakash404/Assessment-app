@@ -4,7 +4,7 @@ const {verifyToken} =  require("../middlewares/authentication")
 
 
 const {createAssessment , createAssessmentDetails , startAssessment} = require("../controllers/assessment");
-router.post("/create" , verifyToken,createAssessment);
+router.post("/create" ,createAssessment);
 router.post("/create/details" ,verifyToken, createAssessmentDetails ) ;
 router.post("/start", verifyToken , startAssessment) ; 
 

@@ -118,6 +118,7 @@ async function bulkUserGenerator(req) {
                         .then(users => {
                             var assessmentDetailData = [];
                             users.forEach(element => {
+                                console.log(assessment)
                                 assessmentDetailData.push({ user: element._id, assessment: assessment[0]._id, url: results.find(student => student.ROLL === element.username).url })
                                 enPasswords.push({ user: element._id, password: results.find(student => student.ROLL === element.username).password })
                             });
