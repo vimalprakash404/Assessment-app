@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 const port = process.env.PORT;
 
-// app.set('trust proxy', true);
+app.set('trust proxy', true);
 app.use(useragent.express());
 
 
