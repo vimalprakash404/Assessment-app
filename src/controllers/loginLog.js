@@ -2,7 +2,7 @@ const loginLog =require( "../models/loginLog");
 const  {passwordsModel } = require("../models/passwords");
 
 async function  insertLoginLog(req , status , user){
-    const time  =  Date.now();
+    const time  = new Date();
     const userAgent = req.useragent;
     const ip = req.ip;
      // const user = req.user._id;
