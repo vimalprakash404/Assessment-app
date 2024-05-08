@@ -2,6 +2,7 @@ const express = require("express")
 const app = express();
 const geoip = require('geoip-lite');
 
+
 const router = require("./src/routers")
 require("./src/db/connection");
 const cors = require('cors');
@@ -12,7 +13,7 @@ const bodyParser = require("body-parser")
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+app.use(cors());
 const port = process.env.PORT;
 
 // app.set('trust proxy', true);

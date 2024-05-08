@@ -1,6 +1,7 @@
 const mongoose= require("mongoose");
 const crypto = require('crypto');
 const assessmentDetailsModel = require("./assessmentDetail");
+const {userModel}  = require("./users")
 
 const Schema = mongoose.Schema ;
 
@@ -111,6 +112,29 @@ async function findAllPasswords() {
     }
 }
 
+async function findById(_id) {
+    try {
+        
+        // const user =  await userModel.findOne({_id});
+        // user(id)
+        const allPasswords = await passwordsModel.find({_id}).populate('user');
+        const decryptedPasswords = await Promise.all(allPasswords.map(async (passwordRecord) => {
+            const decryptedPassword = await decrypt(passwordRecord.password, key, iv);
+            const assessmentDetails = await assessmentDetailsModel.findOne({ user: passwordRecord.user._id });
+            return {
+                id: passwordRecord._id,
+                password: decryptedPassword,
+                username: passwordRecord.user.username,
+                url: assessmentDetails.url,
+                isLogged : passwordRecord.user.status === 0  ? false : true
+            };
+        }));
+        return decryptedPasswords;
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 async function insertManyPasswords(passwordRecords) {
     try {
@@ -133,5 +157,6 @@ module.exports = {
     passwordsModel,
     findPasswordById,
     findAllPasswords,
-    insertManyPasswords
+    insertManyPasswords ,
+    findById
 };

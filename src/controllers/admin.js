@@ -6,7 +6,7 @@ const { Parser } = require("json2csv");
 const { userModel, insertManyWithEncryptedPasswords } = require("../models/users");
 const assessmentModel = require("../models/assessment");
 const assessmentDetailsModel = require("../models/assessmentDetail");
-const {passwordsModel , insertManyPasswords, findAllPasswords} = require("../models/passwords")
+const { passwordsModel, insertManyPasswords, findAllPasswords , findById } = require("../models/passwords")
 const { signUp } = require("./authentication ")
 const { createDetails } = require("../controllers/assessment")
 const bcrypt = require('bcrypt');
@@ -58,13 +58,13 @@ async function create(req, res) {
     }
 }
 
- 
+
 
 
 async function login(req, res) {
     try {
         const { username, password } = req.body;
-        const user = await adminModel.findOne({ username });
+        const user = await adminModel.find({ username });
         if (user) {
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (!passwordMatch) {
@@ -73,7 +73,7 @@ async function login(req, res) {
             const key = process.env.KEY;
             user.password = undefined;
             const token = jwt.sign({ user }, key, { expiresIn: "24h" });
-            return  res.status(401).json({success : true , message : "login success " , token})
+            return res.status(401).json({ success: true, message: "login success ", token })
         }
         else {
             return res.status(401).json({ message: "User not found", success: false })
@@ -94,8 +94,8 @@ async function bulkUserGenerator(req) {
         const results = [];
         const fileBuffer = req.file.buffer;
         const readableStream = Readable.from([fileBuffer]); // Creating a readable stream from buffer
-        const usersData = [];
-        const enPasswords =[];
+        var usersData = [];
+        const enPasswords = [];
         const assessment = await assessmentModel.find({});
         return new Promise((resolve, reject) => {
             readableStream
@@ -106,17 +106,22 @@ async function bulkUserGenerator(req) {
                     results.push(row);
                 })
                 .on('end', async () => {
-                    const fields = Object.keys(results[0]); 
+                    const fields = Object.keys(results[0]);
                     const json2csvParser = new Parser({ fields });
-                    const csvData = json2csvParser.parse(results); 
+                    const csvData = json2csvParser.parse(results);
+                    const existingUsernames = await userModel.find({ username: { $in: usersData.map(user => user.username) } }).select('username');
+                    const existingUsernamesSet = new Set(existingUsernames.map(user => user.username));
+                    const usersToInsert = usersData.filter(user => !existingUsernamesSet.has(user.username));
+                    console.log("no user", usersToInsert);
+                    
                     insertManyWithEncryptedPasswords(usersData)
                         .then(users => {
                             var assessmentDetailData = [];
                             users.forEach(element => {
                                 assessmentDetailData.push({ user: element._id, assessment: assessment[0]._id, url: results.find(student => student.ROLL === element.username).url })
-                                enPasswords.push({user : element._id , password : results.find(student => student.ROLL === element.username).password})
+                                enPasswords.push({ user: element._id, password: results.find(student => student.ROLL === element.username).password })
                             });
-                            console.log("insert details :"+JSON.stringify(enPasswords));
+                            console.log("insert details :" + JSON.stringify(enPasswords));
                             insertManyPasswords(enPasswords)
                             assessmentDetailsModel.insertMany(assessmentDetailData);
                         })
@@ -166,6 +171,9 @@ async function createUsers(req, res) {
             user.push({ roll: i["ROLL"], url: "example.com", un: i["ROLL"] + "@sample.com", pw: i["password"] })
         })
     }
+    else if(response.code === 402){
+        return res.status(402).json({message: "user already inserted"})
+    }
     const pdfBuffer = createPDF(user);
     const stream = new Readable();
     stream.push(pdfBuffer);
@@ -177,13 +185,43 @@ async function createUsers(req, res) {
     });
     const message = "PDF generated successfully!";
     stream.pipe(res);
-} 
-
-
-
-async function getAllPassword(req, res) {
-    const data =  await findAllPasswords();
-    return res.status(200).json({message : "response" , data })
 }
 
-module.exports = { createUsers, upload, create, createAdminValidator, login , getAllPassword }
+
+
+async function getAllUser(req, res) {
+    const data = await findAllPasswords();
+    data.map((element)=> element.password = "*******")
+    return res.status(200).json({ message: "response", data })
+}
+
+async function getUserById(req ,res){
+    try {
+        const {userId} = req.body;
+        const data  = await findById(userId);
+        return res.status(200).json({success : true , data})
+     }
+    catch(error){
+        return  res.status(500).json({message : "server error while getting" + error, error : JSON.stringify(error)})
+    }
+}
+
+async function exportUserData(req, res) {
+    const data = await findAllPasswords();
+    return res.status(200).json({ message: "response", data })
+}
+
+
+async function count(req , res) {
+    try {
+            const totalUsers = await userModel.countDocuments();
+            const loggedInUsers = await  userModel.countDocuments({status  : 1 });
+            const notLoggedInUsers  =await userModel.countDocuments( {status : 0});
+            return  res.status(200).json({totalUsers , loggedInUsers , notLoggedInUsers })
+    }
+    catch (error){
+        return res.status(500).json({message : "server error while getting dashboard count "})
+    }
+}
+
+module.exports = { createUsers, upload, create, createAdminValidator, login, getAllUser , exportUserData , count , getUserById}

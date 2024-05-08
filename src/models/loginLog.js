@@ -1,6 +1,10 @@
 const mongoose = require("mongoose")
-
+const Schema = mongoose.Schema;
 const schema = new mongoose.Schema({
+    user:{
+        type : Schema.Types.ObjectId ,
+        ref : "user"
+    },
     time: {
         type: Date,
         required: true
@@ -12,11 +16,11 @@ const schema = new mongoose.Schema({
     ip: {
         type: String
     },
-    city: { type: String },
-    region: { type: String },
-    country: { type: String },
-    os: { type: String } ,
-    browser : {type : String} ,
+    city: { type: String , default : "Nil" },
+    region: { type: String , default : "Nil"},
+    country: { type: String , default : "Nil"},
+    os: { type: String , default : "Nil"} ,
+    browser : {type : String , default : "Nil"} ,
     status : {type : Number}
 
     // status - 1 - success 

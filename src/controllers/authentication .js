@@ -11,23 +11,25 @@ async function login(username, password, req) {
     try {
         const user = await userModel.findOne({ username });
         if (!user) {
-             await insertLoginLog(req, 2);
+             await insertLoginLog(req, 2 , undefined);
             return { success: false, message: "Invalid user Credentials ", code: 401 }
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-             await insertLoginLog(req, 3);
+             await insertLoginLog(req, 3, undefined);
             return { success: false, message: " Invalid user Credentials", code: 400 };
         }
         const key = process.env.KEY;
+        user.status = 1 ;
+        await user.save();
         user.password = undefined;
         const token = jwt.sign({ user }, key, { expiresIn: "24h" });
-         await insertLoginLog(req, 1);
+         await insertLoginLog(req, 1 , user._id);
         return { success: true, message: "you Logged In", token, code: 200 }
     }
     catch (error) {
-        return { status: 500, message: "server  error while login users" + error, success: false }
+        return { status: 500, message: "server  error while login users" + error, success: false ,code :500}
     }
 }
 

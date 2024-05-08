@@ -33,7 +33,6 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            console.log("Url", url() + '/api/auth/login')
             const response = await axios.post('/api/auth/login', {
                 username: username,
                 password: password
@@ -73,11 +72,7 @@ const Login = () => {
                         <img src={logo} style={{ height: 100 }} />
 
                     </div>
-                    <p className="or"></p>
-                    {/* <div>
-                        <h2 class="title"> Log in</h2>
-                    </div> */}
-
+                    <p className="or"></p>                    
                     {
                         errorMessage ? (<div className="error-msg">
 
