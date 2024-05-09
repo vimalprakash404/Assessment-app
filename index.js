@@ -10,7 +10,7 @@ const useragent = require('express-useragent');
 const axios = require('axios');
 const path = require("path")
 const bodyParser = require("body-parser")
-
+require("dotenv").config({})
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors());

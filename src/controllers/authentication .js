@@ -1,35 +1,35 @@
-const {userModel} = require("../models/users");
+const { userModel } = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { insertLoginLog } = require("./loginLog")
-const {body, validationResult} =  require("express-validator")
+const { body, validationResult } = require("express-validator")
 
-
+require("dotenv").config({})
 
 
 async function login(username, password, req) {
     try {
         const user = await userModel.findOne({ username });
         if (!user) {
-             await insertLoginLog(req, 2 , undefined);
+            await insertLoginLog(req, 2, undefined);
             return { success: false, message: "Invalid user Credentials ", code: 401 }
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-             await insertLoginLog(req, 3, undefined);
+            await insertLoginLog(req, 3, undefined);
             return { success: false, message: " Invalid user Credentials", code: 400 };
         }
         const key = process.env.KEY;
-        user.status = 1 ;
+        user.status = 1;
         await user.save();
         user.password = undefined;
         const token = jwt.sign({ user }, key, { expiresIn: "24h" });
-         await insertLoginLog(req, 1 , user._id);
+        await insertLoginLog(req, 1, user._id);
         return { success: true, message: "you Logged In", token, code: 200 }
     }
     catch (error) {
-        return { status: 500, message: "server  error while login users" + error, success: false ,code :500}
+        return { status: 500, message: "server  error while login users" + error, success: false, code: 500 }
     }
 }
 
@@ -58,6 +58,7 @@ async function signUp(username, password) {
 
 async function createCandidate(req, res) {
     try {
+     
         const { username, password } = req.body
         var createUser = await signUp(username, password);
         const code = createUser["code"];
@@ -69,22 +70,42 @@ async function createCandidate(req, res) {
     }
 }
 
+function domainUsernameToUsernameConverter(email) {
+    const codeRegex = /^(\d+)@example\.com$/;
+    console.log("process" , process.env.DOMAIN)
+    // Extract the code
+    const match = email.match(codeRegex);
+
+    if (match) {
+        const code = match[1];
+        return code ;
+    } else {
+        return false;
+    }
+}
 
 // validator for login 
- 
-const loginValidator=[
-    body("username").isString().notEmpty() ,
+
+
+
+const loginValidator = [
+    body("username").isString().notEmpty(),
     body("password").notEmpty().notEmpty()
 ]
 
 async function candidateLogin(req, res) {
 
     const errors = validationResult(req);
-    if (!errors.isEmpty()){
-        return res.status(402).json({success: false , errors : errors.array()});
+    if (!errors.isEmpty()) {
+        return res.status(402).json({ success: false, errors: errors.array() });
     }
     try {
-        const { username, password } = req.body
+        var { username, password } = req.body;
+        username = domainUsernameToUsernameConverter(username) ;
+        if (!username){
+            return res.status(402).json({ success: false, message : "invalid user credentials"});
+        }
+        // console.log("username" , domainUsernameToUsernameConverter(username));
         var createUser = await login(username, password, req);
         const code = createUser["code"];
         createUser["code"] = undefined;
@@ -96,8 +117,8 @@ async function candidateLogin(req, res) {
 }
 
 
-async function verify(req , res){
-    return res.status(200).json({isAuthenticated : true})
+async function verify(req, res) {
+    return res.status(200).json({ isAuthenticated: true })
 }
 
-module.exports = { verify , createCandidate, candidateLogin ,loginValidator  , signUp};
+module.exports = { verify, createCandidate, candidateLogin, loginValidator, signUp };
