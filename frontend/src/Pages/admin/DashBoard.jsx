@@ -178,6 +178,12 @@ function DashBoard() {
         console.error("server while fetching the login details form server" + error) 
       }
     }
+
+
+    function logout(){
+        localStorage.removeItem("super");
+        navigate("/admin");
+    }
     return (
         <div className="">
             <Modal show={show} onHide={handleClose}>
@@ -232,11 +238,11 @@ function DashBoard() {
             <nav className="navbar navbar-light  justify-content-between text-light" >
                 <div >
                     <a className="navbar-brand inline-block" href="#">
-                        <img src={logo} width="50" height="50" className="inline-block align-top" alt="" />
+                        <img src={logo} width="50" height="50" className="align-top" alt="" />
                     </a>
                 </div>
 
-                <button className="btn btn-light mx-5">Logout</button>
+                <button className="btn btn-light mx-5" onClick={()=>{logout()}}>Logout</button>
             </nav>
             <div className="row justify-center-around">
                 <div className="col-4">
