@@ -188,7 +188,7 @@ function DashBoard() {
         <div className="">
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal Header</Modal.Title>
+                    <Modal.Title>Login Details</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
@@ -307,8 +307,7 @@ function DashBoard() {
                             <thead className="table-dark">
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Url</th>
-                                    <th scope="col">Password </th>
+                                    
                                     <th scope="col"> Is Logged In</th>
                                     <th scope="col">Actions</th>
                                 </tr>
@@ -317,8 +316,8 @@ function DashBoard() {
                                 {candidatesTable.map((item => (
                                     <tr>
                                         <th scope="row">{item.username}</th>
-                                        <td>url</td>
-                                        <td>{item.password}</td>
+                                        
+    
                                         <td>
                                             {item.isLogged === true ? <span className="badge bg-success">logged In</span> : <span className="badge bg-danger">Not logged In</span>}
                                         </td>
